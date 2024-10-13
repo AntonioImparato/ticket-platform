@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{fragments/fragments :: head}">
+    <title>Aggiungi Ticket</title>
+</head>
+
+<body>
+    <header th:insert="~{fragments/navbarAdmin :: navbarAdmin('tickets/create')}"></header>
+
+    <main class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-4 text-center">Crea il tuo ticket</h1>
+
+                <th:block th:if="${deleteMessage != null}">
+                    <div th:replace="~{fragments/fragments :: deleteAlert(${deleteMessage})}"></div>
+                </th:block>
+
+                <form id="ticket-Form" th:object="${ticket}" th:action="@{/tickets/create}" method="POST">
+
+                    <!-- Titolo -->
+                    <div class="mb-3">
+                        <label for="titolo" class="form-label">Titolo</label>
+                        <input type="text" class="form-control" id="titolo" th:field="*{titolo}" th:errorClass="is-invalid" >
+                        <div th:if="${#fields.hasErrors('titolo')}" class="invalid-feedback">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('titolo')}" th:text="${err}"></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Categorie -->
+                    <div class="mb-3">
+                        <label for="categories" class="form-label">Categorie</label>
+                        <div class="form-check">
+                            <div class="row">
+                                <th:block th:each="category : ${categories}">
+                                    <div class="col-md-4 mb-2">
+                                        <input type="checkbox" class="form-check-input" autocomplete="off"
+                                               th:value="${category.id}" th:id="|category_${category.id}|"
+                                               th:field="*{categories}">
+                                        <label class="form-check-label" th:for="|category_${category.id}|"
+                                               th:text="${category.nome}"></label>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                        <div th:if="${#fields.hasErrors('categories')}" class="text-danger">
+                            <p th:errors="*{categories}">Errore nella selezione delle categorie</p>
+                        </div>
+                    </div>
+
+                    <!-- Descrizione -->
+                    <div class="mb-3">
+                        <label for="descrizione" class="form-label">Descrizione</label>
+                        <input type="text" class="form-control" id="descrizione" th:field="*{descrizione}" th:errorClass="is-invalid" required>
+                        <div th:if="${#fields.hasErrors('descrizione')}" class="invalid-feedback">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('descrizione')}" th:text="${err}"></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Operatore -->
+                    <div class="mb-3">
+                        <label for="user">Operatore:</label>
+                        <select th:field="*{user}" class="form-control" required>
+                            <option th:value="${null}" th:text="'Seleziona un operatore'"></option>
+                            <option th:each="user : ${users}" th:value="${user.id}"
+                                    th:text="${user.nome} + ' ' + ${user.cognome}"></option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('user')}" class="text-danger">
+                            <p th:errors="*{user}">Errore nel selezionare l'operatore</p>
+                        </div>
+                    </div>
+
+                    <!-- Pulsanti -->
+                    <div class="mb-3 text-center">
+                        <input type="submit" class="btn btn-sm btn-success me-auto" value="Aggiungi">
+                        <input type="reset" class="btn btn-sm btn-warning" value="Reset">
+                        <a class="btn btn-sm btn-primary me-auto" th:href="@{/tickets/admin}">Dashboard</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer th:insert="~{fragments/fragments :: footer}"></footer>
+</body>
+
+</html>

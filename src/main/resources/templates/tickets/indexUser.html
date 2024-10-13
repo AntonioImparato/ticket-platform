@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{fragments/fragments :: head}"></head>
+
+<body>
+	<header th:insert="~{fragments/navbarAdmin :: navbarAdmin('indexUser')}"></header>
+	<main class="container mt-5">
+		<h1 class="text-center mb-4">Ticket per l'Operatore [[ ${ user.nome }]]</h1>
+
+		<!-- Controllo se la lista tickets è vuota -->
+		<div th:if="${tickets != null and #lists.isEmpty(tickets)}">
+			<p class="alert alert-warning text-center">Non ci sono tickets al momento.</p>
+		</div>
+
+		<!-- Mostra tickets se la lista non è vuota -->
+		<div class="row" th:unless="${tickets == null or #lists.isEmpty(tickets)}">
+
+			<!-- success -->
+			<th:block th:if="${successMessage != null}">
+				<div th:replace="~{fragments/fragments :: successAlert(${successMessage})}"></div>
+			</th:block>
+
+			<!-- delete -->
+			<th:block th:if="${deleteMessage != null}">
+				<div th:replace="~{fragments/fragments :: deleteAlert(${deleteMessage})}"></div>
+			</th:block>
+			<div class="row justify-content-center">
+
+				<div class=" mb-4">
+					<span th:text="${stato}"> </span> <a th:href="@{/operator/statusEdit/{id}(id=${user.id})}"
+						class="btn btn-sm btn-primary">modifica</a>
+				</div>
+				<table class="table table-striped table-bordered">
+					<thead class="thead-dark">
+						<tr>
+							<th>ID</th>
+							<th>Titolo</th>
+							
+							<th>Stato</th>
+							<th>Modifica stato ticket</th>
+							<th>Azioni</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="ticket : ${tickets}">
+							<td th:text="${ticket.id}"></td>
+							<td th:text="${ticket.titolo}"></td>
+						<!--	<td th:text="${ticket.descrizione}"></td> -->
+							<td th:text="${ticket.stato}"></td>
+							<td>
+								<a th:href="@{/operator/editUser/{id}(id=${ticket.id})}"
+									class="btn btn-primary btn-sm">Modifica Stato</a>
+							</td>
+
+							<td>
+								<a th:href="@{/tickets/show/{id}(id=${ticket.id})}"
+									class="btn btn-sm btn-primary">Show</a>
+								<a th:href="@{/notes/operator/tickets/{id}(id=${ticket.id})}"
+									class="btn btn-primary btn-sm">Note</a>
+
+							</td>
+
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+
+		</div>
+
+
+	</main>
+	<footer th:insert="~{fragments/fragments :: footer}"></footer>
+
+</body>
+
+</html>

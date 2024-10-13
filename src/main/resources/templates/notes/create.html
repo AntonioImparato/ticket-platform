@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{fragments/fragments :: head}">
+	<title>aggiungi note</title>
+</head>
+
+<body>
+	<header th:insert="~{fragments/navbarAdmin :: navbarAdmin('notes/create')}"></header>
+
+	<body>
+		<div class="container mt-5">
+			<h2>Crea una nuova nota</h2>
+			<form th:action="@{/notes/create/{ticketId}(ticketId=${note.ticket.id})}" th:object="${note}" method="post">
+				<!-- Campo nascosto per l'ID del ticket -->
+				<input type="hidden" th:field="*{ticket.id}" />
+
+				<!-- Campo nascosto per l'ID dell'utente -->
+				<input type="hidden" th:field="*{user.id}" th:value="${userId}" />
+
+				<div class="mb-3">
+					<label for="user" class="form-label">Autore</label>
+					<input type="text" class="form-control" id="user" th:value="${userName}" readonly>
+					<!-- Campo di sola lettura -->
+				</div>
+
+				<div class="mb-3">
+					<label for="descrizione" class="form-label">Descrizione</label>
+					<textarea class="form-control" id="descrizione" th:field="*{descrizione}" rows="3"
+						th:errorClass="is-invalid"></textarea>
+					<div th:if="${#fields.hasErrors('descrizione')}" class="invalid-feedback">
+						<ul>
+							<li th:each="err : ${#fields.errors('descrizione')}" th:text="${err}"></li>
+						</ul>
+					</div>
+				</div>
+
+				<button type="submit" class="btn btn-primary">Salva Nota</button>
+
+				<th:block sec:authorize="hasAuthority('ADMIN')">
+					<a th:href="@{/notes/admin/tickets/{ticketId}(ticketId=${note.ticket.id})}"
+						class="btn btn-secondary">Annulla</a>
+				</th:block>
+
+				<th:block sec:authorize="hasAuthority('USER')">
+					<a th:href="@{/notes/operator/tickets/{ticketId}(ticketId=${note.ticket.id})}"
+						class="btn btn-secondary">Annulla</a>
+				</th:block>
+			</form>
+		</div>
+	</body>
+
+</html>

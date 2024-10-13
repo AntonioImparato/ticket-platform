@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{fragments/fragments :: head}">
+	<title>aggiungi pizza</title>
+</head>
+
+<body>
+	<header th:insert="~{fragments/navbarAdmin :: navbarAdmin('edit')}"></header>
+
+	<main class="container">
+		<div class:"row">
+			<div class:"col-12">
+				
+				<h1 class="mb-4 text-center">modifica il ticket "[[ ${ ticket.titolo } ]]" </h1>
+				<form id="ticket-Form" th:object=${ticket} th:action="@{/tickets/edit/{id}(id=${ticket.id})}" method="POST">
+				
+					<input type="hidden" th:field="*{createdAt}" />
+					<div class="mb-3">
+						<label for="titolo" class="form-label" >Titolo ticket </label>
+						<input type="text" class="form-control" id="titolo" th:field="*{titolo}"
+							th:errorClass="is-invalid" >
+
+						<div th:if="${#fields.hasErrors('titolo')}" class="invalid-feedback">
+							<ul>     
+								<li th:each="err : ${#fields.errors('titolo')}" th:text="${err}"></li>
+							</ul>
+						</div>
+					</div>
+					<div class="mb-3">
+						<label for="descrizione" class="form-label">Descrizione</label>
+						<textarea class="form-control" id="descrizione" rows="3" th:field="*{descrizione}"
+							th:errorClass="is-invalid"></textarea>
+						<div th:if="${#fields.hasErrors('descrizione')}" class="invalid-feedback">
+							<ul>
+								<li th:each="err : ${#fields.errors('descrizione')}" th:text="${err}"></li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="my-3">
+					    <div class="form-check">
+					        <input id="da-fare" name="stato" type="radio" class="form-check-input"
+					            th:field="*{stato}" th:value="'Da fare'" th:errorClass="is-invalid">
+					        <label class="form-check-label" for="da-fare">Da fare</label>
+					    </div>
+					    <div class="form-check">
+					        <input id="in-corso" name="stato" type="radio" class="form-check-input"
+					            th:field="*{stato}" th:value="'In corso'" th:errorClass="is-invalid">
+					        <label class="form-check-label" for="in-corso">Assegnato</label>
+					    </div>
+					    <div class="form-check">
+					        <input id="fatto" name="stato" type="radio" class="form-check-input"
+					            th:field="*{stato}" th:value="'Fatto'" th:errorClass="is-invalid">
+					        <label class="form-check-label" for="fatto">Fatto</label>
+					    </div>
+					    <div th:if="${#fields.hasErrors('stato')}" class="invalid-feedback">
+					        <ul>
+					            <li th:each="err : ${#fields.errors('stato')}" th:text="${err}"></li>
+					        </ul>
+					    </div>
+					</div>
+					
+					<div class="mb-3">
+					    <label for="user">Operatore:</label>
+					    <select class="form-control" disabled>
+					        <option th:value="${null}" th:text="'Seleziona un operatore'" th:if="${ticket.user == null}"></option>
+					        <option th:value="${ticket.user.id}" th:text="${ticket.user.nome}" th:if="${ticket.user != null}"></option>
+					    </select>
+					    <input type="hidden" th:field="*{user.id}" th:value="${ticket.user.id}" />
+					</div>
+					
+					<div class=" mb-3 text-center">
+						<input type="submit" class=" btn btn-sm btn-danger me-auto" value="Modifica">
+						<input type="reset" class=" btn btn-sm btn-warning " value="Reset">
+						<a class="btn btn-sm btn-primary me-auto" th:href="@{/tickets/admin}">Dashboard</a>
+
+					</div>
+				</form>
+			</div>
+		</div>
+	</main>
+	<footer th:insert="~{fragments/fragments :: footer}"></footer>
+</body>
+
+</html>
