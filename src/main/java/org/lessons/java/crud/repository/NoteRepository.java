@@ -9,7 +9,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableJpaRepositories
 public interface NoteRepository extends JpaRepository<Note, Integer> {
+	
     List<Note> findByTicket(Ticket ticket);
+    
     List<Note> findByTicketId(Integer ticketId);
     
 }

@@ -1,4 +1,5 @@
 package org.lessons.java.crud.controller;
+
 import java.util.List;
 
 import org.lessons.java.crud.model.Note;
@@ -34,98 +35,88 @@ public class NoteController {
     @Autowired
     private UserService serviceUser;
 
-    //admin visualizza tutte le note associate a un ticket 
+    // Admin visualizza tutte le note associate a un ticket
     @GetMapping("/admin/tickets/{ticketId}")
     public String listNotes(@PathVariable("ticketId") Integer ticketId, Model model) {
         Ticket ticket = ticketService.findById(ticketId);
         if (ticket == null) {
-            return "redirect:/tickets/admin"; 
+            return "redirect:/tickets/admin"; // Redirige se il ticket non esiste
         }
-        List<Note> notes = noteService.findByTicket(ticket);
+        List<Note> notes = noteService.findByTicket(ticket); // Recupera le note del ticket
         model.addAttribute("notes", notes);
         model.addAttribute("ticket", ticket);
-        return "notes/index"; 
+        return "notes/index"; // Pagina per visualizzare le note
     }
 
-    //index operator note
+    // Operatore visualizza le note associate a un ticket
     @GetMapping("operator/tickets/{ticketId}")
     public String showNotesByTicket(@PathVariable Integer ticketId, Model model,
-    								Authentication auth,
-    								RedirectAttributes attributes) {
+                                    Authentication auth,
+                                    RedirectAttributes attributes) {
         Ticket ticket = ticketService.findById(ticketId);
         if (ticket == null) {
-            return "redirect:/tickets/operator"; 
+            return "redirect:/tickets/operator"; // Redirige se il ticket non esiste
         }
-        
+
         String username = auth.getName();
+        // Controllo se l'operatore è autorizzato a visualizzare il ticket
         if (!(ticket.getUser().getUsername().equals(username))) {
-        	 attributes.addFlashAttribute("error", "Non sei autorizzato.");
-            return "redirect:/tickets/operator"; 
+            attributes.addFlashAttribute("error", "Non sei autorizzato.");
+            return "redirect:/tickets/operator";
         }
 
-
-        List<Note> notes = noteService.findByTicket(ticket); 
+        List<Note> notes = noteService.findByTicket(ticket); // Recupera le note associate
         model.addAttribute("notes", notes);
         model.addAttribute("ticket", ticket);
 
-        return "notes/show"; 
+        return "notes/show"; // Pagina per visualizzare le note
     }
-    
-  //create get
+
+    // Form per creare una nuova nota (operatore o admin)
     @GetMapping("/create/{ticketId}")
     public String createNote(@Valid @PathVariable Integer ticketId, Model model,
-    						Authentication auth,
-    						RedirectAttributes attributes) {
-    	
+                             Authentication auth,
+                             RedirectAttributes attributes) {
         Ticket ticket = ticketService.findById(ticketId);
         if (ticket == null) {
-            return "redirect:/tickets/operator"; 
+            return "redirect:/tickets/operator"; // Redirige se il ticket non esiste
         }
+
         User user = serviceUser.findByUsername(auth.getName()).get();
         String username = user.getUsername();
-        if (serviceUser.checkIsUserRole(user.getUsername()) && !(ticket.getUser().getUsername().equals(username))) {
-        		attributes.addFlashAttribute("error", "Non sei autorizzato.");
-        		return "redirect:/tickets/operator"; 
-        }
         
-        Note note = new Note(user, ticket);
-       
+        // Controllo se l'operatore è autorizzato a creare note per questo ticket
+        if (serviceUser.checkIsUserRole(user.getUsername()) && !(ticket.getUser().getUsername().equals(username))) {
+            attributes.addFlashAttribute("error", "Non sei autorizzato.");
+            return "redirect:/tickets/operator";
+        }
+
+        Note note = new Note(user, ticket); // Crea una nuova nota con il ticket associato
         model.addAttribute("ticket", ticket);
         model.addAttribute("note", note);
-        model.addAttribute("userName",username);
+        model.addAttribute("userName", username);
         model.addAttribute("userId", user.getId());
 
-        return "notes/create"; 
-    }
-    
-  //create post
-    @PostMapping("/create/{ticketId}")
-    public String createNote(@PathVariable Integer ticketId, @Valid @ModelAttribute Note note, BindingResult bindingResult , 
-    		RedirectAttributes attributes,
-    		Authentication auth,
-    		 Model model) {
-    	 if (bindingResult.hasErrors()) {
-    		 model.addAttribute("userName", serviceUser.findByUsername(auth.getName()).get().getUsername());
-             model.addAttribute("user", noteService.findAll());
-             return "/notes/create";
-         }
-    	noteService.save(note, attributes);
-    	
-    	User user = serviceUser.findByUsername(auth.getName()).get();
-        if (serviceUser.checkIsUserRole(user.getUsername())) {
-        	 return "redirect:/notes/operator/tickets/{ticketId}"; 
-        }
-        else
-    	 return "redirect:/notes/admin/tickets/{ticketId}";
+        return "notes/create"; // Mostra la pagina di creazione della nota
     }
 
-  
-//    @PostMapping("/tickets/{ticketId}/notes/delete/{noteId}")
-//    public String deleteNote(@PathVariable("ticketId") Integer ticketId, 
-//                             @PathVariable("noteId") Integer noteId, 
-//                             RedirectAttributes redirectAttributes) {
-//        noteService.deleteById(noteId);
-//        redirectAttributes.addFlashAttribute("message", "Nota eliminata con successo!");
-//        return "redirect:/notes/tickets/" + ticketId + "/notes"; // Cambiato l'URL per riflettere la lista delle note
-//    }
+    // Salva la nuova nota creata
+    @PostMapping("/create/{ticketId}")
+    public String createNote(@PathVariable Integer ticketId, @Valid @ModelAttribute Note note, BindingResult bindingResult,
+                             RedirectAttributes attributes, Authentication auth, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("userName", serviceUser.findByUsername(auth.getName()).get().getUsername());
+            return "/notes/create"; // Ritorna alla pagina di creazione in caso di errori
+        }
+        
+        noteService.save(note, attributes); // Salva la nota
+
+        User user = serviceUser.findByUsername(auth.getName()).get();
+        // Redirige alla pagina corretta in base al ruolo dell'utente
+        if (serviceUser.checkIsUserRole(user.getUsername())) {
+            return "redirect:/notes/operator/tickets/{ticketId}";
+        } else {
+            return "redirect:/notes/admin/tickets/{ticketId}";
+        }
+    }
 }

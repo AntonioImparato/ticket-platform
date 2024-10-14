@@ -13,10 +13,15 @@ import org.springframework.data.repository.query.Param;
 public interface UserRepository extends JpaRepository<User, Integer>{
 
 	List<User> findByNome(String nome);
+	
 	public Optional<User> findByUsername(String username);
+	
 	List<User> findByNomeContains(String nome);
+	
 	List<User> findByStatusTrue();
+	
 	List<User> findAll();
+	
 	@Query(" SELECT u FROM User u JOIN u.roles r WHERE u.status = True and r.name = :roleName")
 	List<User> findByStatusTrueAndRoleName(@Param("roleName") String roleName);
 	

@@ -24,30 +24,29 @@ public class CategoryController {
     @Autowired
     private CategoryService service;
     
-    // index
+    // Mostra tutte le categorie
     @GetMapping()
-    public String index(Model model, Integer id) {
-        List<Category> categories;
-            categories = service.findAll();
+    public String index(Model model) {
+        List<Category> categories = service.findAll();
         model.addAttribute("categories", categories);
         return "/categorie/index";
     }
 
-    // show
+    // Visualizza i dettagli di una singola categoria
     @GetMapping("/show/{id}")
     public String show(@PathVariable("id") Integer id, Model model) {
         model.addAttribute("category", service.findById(id));
         return "/categorie/show";
     }
 
-    // createGet
+    // Mostra il form per aggiungere una nuova categoria
     @GetMapping("/create")
     public String add(Model model) {
         model.addAttribute("category", new Category());
         return "/categorie/create";
     }
 
-    // createPost
+    // Salva una nuova categoria
     @PostMapping("/create")
     public String store(@Valid @ModelAttribute("category") Category formCategory, 
                         BindingResult bindingResult, 
@@ -60,14 +59,14 @@ public class CategoryController {
         return "redirect:/categorie";
     }
 
-    // edit
+    // Mostra il form per modificare una categoria esistente
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
         model.addAttribute("category", service.findById(id));
         return "/categorie/edit";
     }
 
-    // Update
+    // Aggiorna una categoria esistente
     @PostMapping("/edit/{id}")
     public String update(@Valid @ModelAttribute("category") Category updateFormCategory, 
                          BindingResult bindingResult,
@@ -80,11 +79,10 @@ public class CategoryController {
         return "redirect:/categorie";
     }
     
-  //delite
-  		@PostMapping("delete/{id}")
-  			public String delite(@PathVariable("id") Integer id,
-  					RedirectAttributes attributes){
-  				service.deleteById(id, attributes);
-  				return"redirect:/categorie";
-  			}
+    // Elimina una categoria
+    @PostMapping("delete/{id}")
+    public String delete(@PathVariable("id") Integer id, RedirectAttributes attributes) {
+        service.deleteById(id, attributes);
+        return "redirect:/categorie";
+    }
 }
