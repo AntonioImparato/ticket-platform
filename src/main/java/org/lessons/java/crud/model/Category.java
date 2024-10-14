@@ -2,6 +2,8 @@ package org.lessons.java.crud.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +25,7 @@ public class Category {
 	@Size(min=2, max=25)
 	private String nome;
 	
+	@JsonBackReference
 	@ManyToMany(mappedBy ="categories")
 	private List<Ticket> ticket;
 

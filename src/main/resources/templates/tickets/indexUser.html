@@ -22,8 +22,8 @@
 			</th:block>
 
 			<!-- delete -->
-			<th:block th:if="${deleteMessage != null}">
-				<div th:replace="~{fragments/fragments :: deleteAlert(${deleteMessage})}"></div>
+			<th:block th:if="${error != null}">
+				<div th:replace="~{fragments/fragments :: error(${error})}"></div>
 			</th:block>
 			<div class="row justify-content-center">
 

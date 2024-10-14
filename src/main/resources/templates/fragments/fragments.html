@@ -9,17 +9,19 @@
 </head>
 
 <body>
+	<th:blook th:fragment="fragments(route)" > 
+		<div th:fragment="successAlert(message)" class="alert alert-success alert-dismissible fade show" role="alert">
+				<span th:text="${message}"> </span>
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		
+		
+		<div th:fragment="error(message)" class="alert alert-danger alert-dismissible fade show" role="alert">
+				<span th:text="${message}"> </span>
+			  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	</th:blookth:fragment="navbar(route)">
 	
-	<div th:fragment="successAlert(message)" class="alert alert-success alert-dismissible fade show" role="alert">
-			<span th:text="${message}"> </span>
-		  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-	</div>
-	
-	
-	<div th:fragment="deleteAlert(message)" class="alert alert-danger alert-dismissible fade show" role="alert">
-			<span th:text="${message}"> </span>
-		  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-	</div>
 	
 	<footer th:fragment="footer" class="mt-4">
 		<div class="container">
@@ -31,24 +33,3 @@
         
     </body>
 </html>
-
-
-
-<!--
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<th:block th:fragment="head">
-			<title>menu pizza</title>
-			<meta charset="utf-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1">
-			<-- Bootstrap CSS --
-			<link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}"/>
-		</th:block>
-	</head>
-	<body>
-		<header></header>
-		<footer th:fragment="footer"></footer>
-	</body>
-</html>
---> 

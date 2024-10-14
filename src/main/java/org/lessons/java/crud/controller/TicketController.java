@@ -43,6 +43,7 @@ public class TicketController {
 	// index Admin
 	@GetMapping("/admin")
 	public String dashboardAdmin(Model model, String titolo) {
+		
 		List<Ticket> tickets;
 		tickets = serviceTicket.findAllOrderByTitolo();
 		if (titolo != null && !titolo.isEmpty()) {
@@ -102,7 +103,7 @@ public class TicketController {
 		String username = user.get().getUsername();
 
 		if (serviceUser.checkIsUserRole(username) && !(ticket.getUser().getUsername().equals(username))) {
-			attributes.addFlashAttribute("deleteMessage", "Non sei autorizzato.");
+			attributes.addFlashAttribute("error", "Non sei autorizzato.");
 			return "redirect:/tickets/operator";
 		}
 
@@ -114,7 +115,7 @@ public class TicketController {
 		return "/tickets/show";
 	}
 
-	// createGet
+	// createGet admin
 	@GetMapping("/create")
 	public String add(Model model) {
 		List<User> users = serviceUser.findByStatusTrueAndRoleName("USER");
@@ -125,7 +126,7 @@ public class TicketController {
 		return "/tickets/create";
 	}
 
-	// createPost
+	// createPost admin
 	@PostMapping("/create")
 	public String store(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult, Model model,
 			RedirectAttributes attributes, Authentication auth) {
@@ -134,7 +135,7 @@ public class TicketController {
 			List<User> users = serviceUser.findByStatusTrueAndRoleName("USER");
 			model.addAttribute("categories", serviceCategory.findAll());
 			model.addAttribute("users", users);
-			attributes.addFlashAttribute("deleteMessage", "devi aggiungere i campi correttamente");
+			attributes.addFlashAttribute("error", "devi aggiungere i campi correttamente");
 			return "/tickets/create";
 		}
 		serviceTicket.save(formTicket, attributes);
@@ -142,14 +143,15 @@ public class TicketController {
 		return "redirect:/tickets/admin";
 	}
 
-	// edit
-	@GetMapping("/edit/{id}")
+	// edit admin
+	@GetMapping("/admin/edit/{id}")
 	public String edit(@PathVariable("id") Integer id, Model model) {
+		model.addAttribute("categories", serviceCategory.findAll());
 		model.addAttribute("ticket", serviceTicket.findById(id));
 		return "/tickets/edit";
 	}
 
-	// Update
+	// Update admin
 	@PostMapping("/edit/{id}")
 	public String update(@Valid @ModelAttribute("ticket") Ticket updateFormTicket, BindingResult bindingResult,
 			Model model, RedirectAttributes attributes) {
@@ -158,7 +160,7 @@ public class TicketController {
 		}
 		
 		if(!serviceUser.findById(updateFormTicket.getUser().getId()).getStatus()) {
-			attributes.addFlashAttribute("deleteMessage", "Utente non attivo");
+			attributes.addFlashAttribute("error", "Utente non attivo");
 			return "redirect:/tickets/admin";
 		}
 		
@@ -188,7 +190,7 @@ public class TicketController {
 		User user = serviceUser.findById(id);
 		if(!user.getStatus())
 		{
-			attributes.addFlashAttribute("deleteMessage", "non puoi modificare lo stato dei ticket");
+			attributes.addFlashAttribute("error", "non puoi modificare lo stato dei ticket");
 			return "redirect:/tickets/operator";
 		}
 		Ticket ticket = serviceTicket.findById(id);
@@ -197,7 +199,7 @@ public class TicketController {
 			ticket.setStato(stato); // Aggiorna solo lo stato
 			serviceTicket.update(ticket, attributes); // Salva il ticket aggiornato
 		} else {
-			attributes.addFlashAttribute("deleteMessage", "Ticket non trovato.");
+			attributes.addFlashAttribute("error", "Ticket non trovato.");
 		}
 
 		return "redirect:/tickets/operator";

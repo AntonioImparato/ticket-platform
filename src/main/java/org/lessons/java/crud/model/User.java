@@ -6,6 +6,9 @@ import java.util.Set;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,10 +26,12 @@ import jakarta.validation.constraints.Size;
 @Table(name = "users")
 public class User {
 
+	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@JsonIgnore
 	@NotNull
 	@Size(min=2, max=50)
 	@Column(name = "email", nullable = false, unique = true)
@@ -37,35 +42,42 @@ public class User {
 	 @Column(name = "username", nullable = false, unique = true)
 	 private String username;
 	
+     @JsonIgnore
 	@Size(min=2, max=25)
 	@Column(name = "nome", nullable = false)
 	private String nome;
 	
+     @JsonIgnore
 	@Size(min=2, max=25)
 	@Column(name = "cognome", nullable = false)
 	private String cognome;
 	
 	@NotNull
+	@JsonIgnore
 	@Size(min=2, max=255)
 	@Column(name = "password")
 	private String password;
 	
+	@JsonIgnore
 	@Column(name = "status", nullable = false)
 	private Boolean status;
 	
+	@JsonIgnore
 	@UpdateTimestamp
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 	
+	@JsonBackReference
 	@OneToMany(mappedBy = "user", cascade = { CascadeType.REMOVE})
 	private List<Ticket> tickets;
 	
+	@JsonBackReference
 	 @OneToMany(mappedBy = "user",  cascade = { CascadeType.REMOVE})
 	    private List<Note> note;
-	 
+	
+	@JsonBackReference
 	 @ManyToMany(fetch = FetchType.EAGER)
 		private Set<Role> roles;
-
 	
 	public Integer getId() {
 		return id;
@@ -99,11 +111,11 @@ public class User {
 		this.status = status;
 	}
 
-	public LocalDateTime getUpdatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setUpdatedAt(LocalDateTime updatedAt) {
+	public void setCreatedAt(LocalDateTime updatedAt) {
 		this.createdAt = updatedAt;
 	}
 

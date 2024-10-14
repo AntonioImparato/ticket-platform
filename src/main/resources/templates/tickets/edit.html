@@ -37,6 +37,28 @@
 							</ul>
 						</div>
 					</div>
+					
+					<!-- Categorie -->
+					                    <div class="mb-3">
+					                        <label for="categories" class="form-label">Categorie</label>
+					                        <div class="form-check">
+					                            <div class="row">
+					                                <th:block th:each="category : ${categories}">
+					                                    <div class="col-md-4 mb-2">
+					                                        <input type="checkbox" class="form-check-input" autocomplete="off"
+					                                               th:value="${category.id}" th:id="|category_${category.id}|"
+					                                               th:field="${ticket.categories}">
+					                                        <label class="form-check-label" th:for="|category_${category.id}|"
+					                                               th:text="${category.nome}"></label>
+					                                    </div>
+					                                </th:block>
+					                            </div>
+					                        </div>
+					                        <div th:if="${#fields.hasErrors('categories')}" class="text-danger">
+					                            <p th:errors="*{categories}">Errore nella selezione delle categorie</p>
+					                        </div>
+					                    </div>
+
 
 					<div class="my-3">
 					    <div class="form-check">

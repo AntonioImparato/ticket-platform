@@ -20,23 +20,6 @@
 										th:classappend="${route =='ticket' ? 'active' : 'non-active'}">Dashboard</a>
 								</li>
 
-
-								<!-- admin -->
-								<th:block sec:authorize="hasAuthority('ADMIN')">
-									<li class="nav-item">
-										<a class="nav-link" th:href="@{/tickets/admin}"
-											th:classappend="${route =='ticket' ? 'active' : 'non-active'}">ADMIN</a>
-									</li>
-								</th:block>
-
-								<!-- user -->
-								<th:block sec:authorize="hasAuthority('USER')">
-									<li class="nav-item">
-										<a class="nav-link" th:href="@{/tickets/operator}"
-											th:classappend="${route =='ticket' ? 'active' : 'non-active'}">OPERATOR</a>
-									</li>
-								</th:block>
-
 								<li class="nav-item">
 									<a class="nav-link" th:href="@{/logout}"
 										th:classappend="${route =='ticket' ? 'active' : 'non-active'}">LOGOUT</a>

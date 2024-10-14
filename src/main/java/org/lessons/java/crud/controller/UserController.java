@@ -53,7 +53,7 @@ public class UserController {
 			    return "/tickets/editUser";
 		    }
 		    else {
-		    	attributes.addFlashAttribute("deleteMessage", " Errore non sei autorizzato  " );
+		    	attributes.addFlashAttribute("error", " Errore non sei autorizzato  " );
 		    }
 		    return "redirect:/tickets/operator";
 		}
@@ -70,7 +70,7 @@ public class UserController {
 	    User user = serviceUser.findByUsername(auth.getName()).get();
   		if(!user.getStatus())
   		{
-  			attributes.addFlashAttribute("deleteMessage", "non puoi modificare lo stato dei ticket");
+  			attributes.addFlashAttribute("error", "non puoi modificare lo stato dei ticket");
   			return "redirect:/tickets/operator";
   		}
   		
@@ -78,7 +78,7 @@ public class UserController {
 	        ticket.setStato(stato); // Aggiorna solo lo stato
 	        serviceTicket.update(ticket, attributes); // Salva il ticket aggiornato
 	    } else {
-	        attributes.addFlashAttribute("deleteMessage", "Ticket non trovato.");
+	        attributes.addFlashAttribute("error", "Ticket non trovato.");
 	    }
 
 	    return "redirect:/tickets/operator";
@@ -96,14 +96,14 @@ public class UserController {
 			} 
 			
 			else {
-			   attributes.addFlashAttribute("deleteMessage", "Ticket non trovato.");
+			   attributes.addFlashAttribute("error", "Ticket non trovato.");
 			}
 			
 			if(user.getUsername().equals(auth.getName())){
 				return"user/editStatus";
 			}
 			else {
-				attributes.addFlashAttribute("deleteMessage", "Non sei autorizzato.");
+				attributes.addFlashAttribute("error", "Non sei autorizzato.");
 				return"redirect:/tickets/operator";
 			}
 		}
@@ -120,7 +120,7 @@ public class UserController {
 				    {
 				    	if(ticket.getStato().equals("Da fare")  || ticket.getStato().equals("In corso") )
 				    	{
-				    		 attributes.addFlashAttribute("deleteMessage", "Hai ancora dei ticket da finire.");
+				    		 attributes.addFlashAttribute("error", "Hai ancora dei ticket da finire.");
 				    		 return "redirect:/tickets/operator";
 				    	}
 				    }

@@ -3,6 +3,7 @@ package org.lessons.java.crud.service;
 import java.util.List;
 
 import org.lessons.java.crud.model.Category;
+import org.lessons.java.crud.model.Ticket;
 import org.lessons.java.crud.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,8 +37,12 @@ public class CategoryService {
 
 	   public RedirectAttributes deleteById(Integer id, RedirectAttributes attributes) { 
 		   categoryRepository.deleteById(id);  
-		     return attributes.addFlashAttribute("deleteMessage", " categoria eliminata" );
+		     return attributes.addFlashAttribute("error", " categoria eliminata" );
 		    
 	   }
+
+	public Category findByNome(String category) {
+		return categoryRepository.findByNome(category);
+	}
 
 }

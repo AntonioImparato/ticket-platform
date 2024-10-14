@@ -1,10 +1,7 @@
 package org.lessons.java.crud.controller;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 import org.lessons.java.crud.model.Note;
-import org.lessons.java.crud.model.Role;
 import org.lessons.java.crud.model.Ticket;
 import org.lessons.java.crud.model.User;
 import org.lessons.java.crud.service.NoteService;
@@ -57,12 +54,12 @@ public class NoteController {
     								RedirectAttributes attributes) {
         Ticket ticket = ticketService.findById(ticketId);
         if (ticket == null) {
-            return "redirect:/tickets/operator"; // Reindirizza se il ticket non esiste
+            return "redirect:/tickets/operator"; 
         }
         
         String username = auth.getName();
         if (!(ticket.getUser().getUsername().equals(username))) {
-        	 attributes.addFlashAttribute("deleteMessage", "Non sei autorizzato.");
+        	 attributes.addFlashAttribute("error", "Non sei autorizzato.");
             return "redirect:/tickets/operator"; 
         }
 
@@ -81,18 +78,18 @@ public class NoteController {
     						RedirectAttributes attributes) {
     	
         Ticket ticket = ticketService.findById(ticketId);
-        if (ticket == null)
+        if (ticket == null) {
             return "redirect:/tickets/operator"; 
-        
+        }
         User user = serviceUser.findByUsername(auth.getName()).get();
         String username = user.getUsername();
         if (serviceUser.checkIsUserRole(user.getUsername()) && !(ticket.getUser().getUsername().equals(username))) {
-        		attributes.addFlashAttribute("deleteMessage", "Non sei autorizzato.");
+        		attributes.addFlashAttribute("error", "Non sei autorizzato.");
         		return "redirect:/tickets/operator"; 
         }
         
         Note note = new Note(user, ticket);
-
+       
         model.addAttribute("ticket", ticket);
         model.addAttribute("note", note);
         model.addAttribute("userName",username);
@@ -107,7 +104,6 @@ public class NoteController {
     		RedirectAttributes attributes,
     		Authentication auth,
     		 Model model) {
-      
     	 if (bindingResult.hasErrors()) {
     		 model.addAttribute("userName", serviceUser.findByUsername(auth.getName()).get().getUsername());
              model.addAttribute("user", noteService.findAll());

@@ -3,6 +3,9 @@ package org.lessons.java.crud.model;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,10 +31,13 @@ public class Note {
 
     @ManyToOne
 	@JoinColumn(name="ticket_id", nullable = false) 
+    @JsonBackReference
+    
     private Ticket ticket;
     
     @ManyToOne
 	@JoinColumn(name="user_id", nullable = false)
+    @JsonBackReference
 	private User user; 
     
     public Note() {
@@ -60,6 +66,7 @@ public class Note {
 		this.user = user;
 	}
 
+	@JsonIgnore
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
@@ -84,6 +91,7 @@ public class Note {
 		this.ticket = ticket;
 	}
 	
+	@JsonIgnore
     public String getDataCreazioneFormatted() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         return createdAt.format(formatter);

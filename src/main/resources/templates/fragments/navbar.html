@@ -15,21 +15,7 @@
 						</button>
 						<div class="collapse navbar-collapse" id="navbarSupportedContent">
 							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-								<!-- admin -->
-								<th:block sec:authorize="hasAuthority('ADMIN')">
-									<li class="nav-item">
-										<a class="nav-link" th:href="@{/tickets/admin}"
-											th:classappend="${route =='ticket' ? 'active' : 'non-active'}">ADMIN</a>
-									</li>
-								</th:block>
-
-								<!-- user -->
-								<th:block sec:authorize="hasAuthority('USER')">
-									<li class="nav-item">
-										<a class="nav-link" th:href="@{/tickets/operator}"
-											th:classappend="${route =='ticket' ? 'active' : 'non-active'}">OPERATOR</a>
-									</li>
-								</th:block>
+								
 
 								<li class="nav-item">
 									<a class="nav-link" th:href="@{/logout}"

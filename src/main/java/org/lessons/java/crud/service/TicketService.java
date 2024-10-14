@@ -44,7 +44,7 @@ public class TicketService {
     
 	 public RedirectAttributes deleteById(Integer id, RedirectAttributes attributes) { 
 		 ticketRepository.deleteById(id);  
-	     return attributes.addFlashAttribute("deleteMessage", " Offerta eliminata" );
+	     return attributes.addFlashAttribute("error", " Offerta eliminata" );
 	    
 	    }
 	 
@@ -55,4 +55,8 @@ public class TicketService {
 	 public List<Ticket> findByUsername(String username){
 		 	return ticketRepository.findByUsername(username);
 	 }
+
+	public List<Ticket> findByStato(String stato) {
+		return ticketRepository.findByStato(stato);
+	}
 }

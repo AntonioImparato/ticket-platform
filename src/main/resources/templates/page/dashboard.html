@@ -2,21 +2,59 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:insert="~{fragments/fragments :: head}">
-
+	<title>Dashboard - Piattaforma Ticket</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
 <body>
-    <header th:insert="~{fragments/navbar :: navbar('tickets')}"></header>
+	<header th:insert="~{fragments/navbar :: navbar('dashboard')}"></header>
 
-    <main class="container">
- 
-   
-		     
-    <footer th:insert="~{fragments/fragments :: footer}"></footer>
+	<main class="container mt-5">
+		<div class="jumbotron text-center">
+			<h1 class="display-4">Benvenuto sulla Piattaforma Ticketing</h1>
+			<p class="lead">Gestisci facilmente i tuoi ticket con il nostro sistema intuitivo e veloce.</p>
+			<hr class="my-4">
+			<p>La piattaforma ti permette di creare, visualizzare e aggiornare i ticket in base alle tue necessità.
+				Mantieni traccia dello stato di ogni richiesta e risolvi i problemi con efficienza.</p>
+		</div>
 
-    <!-- Include Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+		<div class="row mt-4">
+			<div class="col-md-4">
+				<h3>Gestione Semplice</h3>
+				<p>Grazie alla nostra interfaccia intuitiva, puoi creare e monitorare i ticket senza sforzo, tutto in
+					un'unica piattaforma.</p>
+			</div>
+			<div class="col-md-4">
+				<h3>Stato dei Ticket</h3>
+				<p>Visualizza in tempo reale lo stato dei tuoi ticket. Saprai sempre a che punto si trova ogni richiesta
+					e quali sono state completate.</p>
+			</div>
+			<div class="col-md-4">
+				<h3>Supporto Rapido</h3>
+				<p>Il nostro team è a tua disposizione per aiutarti con qualsiasi problema. Crea un ticket e ricevi
+					assistenza nel minor tempo possibile.</p>
+			</div>
+		</div>
+
+		<div class="row mt-4">
+			<div class="col text-center">
+				<!-- admin -->
+				<th:block sec:authorize="hasAuthority('ADMIN')">
+					<a class="btn btn-primary btn-lg" th:href="@{/tickets/admin}"
+						th:classappend="${route =='ticket' ? 'active' : 'non-active'}">Visualizza i Ticket</a>
+				</th:block>
+				<!-- user -->
+				<th:block sec:authorize="hasAuthority('USER')">
+					<a class="btn btn-primary btn-lg" th:href="@{/tickets/operator}"
+						th:classappend="${route =='ticket' ? 'active' : 'non-active'}">Visualizza i Ticket</a>
+				</th:block>
+			</div>
+		</div>
+	</main>
+
+	<footer th:insert="~{fragments/fragments :: footer}"></footer>
+
 </body>
+
 </html>

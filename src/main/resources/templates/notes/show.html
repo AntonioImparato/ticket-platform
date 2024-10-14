@@ -8,29 +8,44 @@
 
 
 	<div class="container mt-5">
+
 		<!-- success -->
 		<th:block th:if="${successMessage != null}">
 			<div th:replace="~{fragments/fragments :: successAlert(${ successMessage })}"></div>
 		</th:block>
-		<h2>Note per il Ticket ID: <span th:text="${ticket.id}"></span></h2>
-		<table class="table table-bordered">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Descrizione</th>
-					<th>Data Creazione</th>
-					<th>Autore</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="note : ${notes}">
-					<td th:text="${note.id}"></td>
-					<td th:text="${note.descrizione}"></td>
-					<td th:text="${note.dataCreazioneFormatted}"></td>
-					<td th:text="${note.user.nome}"></td>
-				</tr>
-			</tbody>
-		</table>
+
+		<!-- delete -->
+		<th:block th:if="${error != null}">
+			<div th:replace="~{fragments/fragments :: deleteAlert(${ error })}"></div>
+		</th:block>
+
+		<!-- Controllo se la lista tickets è vuota -->
+		<div th:if="${notes != null and notes.isEmpty()}">
+			<p class="alert alert-warning text-center">Non ci sono tickets al momento.</p>
+		</div>
+
+		<!-- Mostra tickets se la lista non è vuota -->
+		<div class="row" th:unless="${notes == null or notes.isEmpty()}">
+			<h2>Note per il Ticket ID: <span th:text="${ticket.id}"></span></h2>
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Descrizione</th>
+						<th>Data Creazione</th>
+						<th>Autore</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="note : ${notes}">
+						<td th:text="${note.id}"></td>
+						<td th:text="${note.descrizione}"></td>
+						<td th:text="${note.dataCreazioneFormatted}"></td>
+						<td th:text="${note.user.nome}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		<a th:href="@{/notes/create/{ticketId}(ticketId=${ticket.id})}" class="btn btn-primary">Crea una Nuova Nota</a>
 		<a href="/tickets/operator" class="btn btn-secondary">Annulla</a>
 	</div>

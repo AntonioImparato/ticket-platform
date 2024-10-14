@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -52,13 +55,17 @@ public class Ticket {
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 	
+	
 	@ManyToOne
 	@JoinColumn(name="user_id", nullable = false)
+	@JsonBackReference
 	private User user; 
 	
+	@JsonBackReference
 	@OneToMany(mappedBy = "ticket")
 	private List<Note> note;
 	 
+	@JsonBackReference
 	 @ManyToMany()
 		@JoinTable(
 				name= "ticket_category",
@@ -67,8 +74,6 @@ public class Ticket {
 				)
 		private List<Category> categories;
 
-	@Transient
-	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-YYYY HH:mm");
 	
 	public Ticket () {
 		this.stato = "Da fare";
@@ -147,20 +152,5 @@ public class Ticket {
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
-
-	public DateTimeFormatter getDateFormatter() {
-		return dateFormatter;
-	}
-
-	public void setDateFormatter(DateTimeFormatter dateFormatter) {
-		this.dateFormatter = dateFormatter;
-	}
-	
-//	public String getFormattedUpdatedAt() {
-//		if (updatedAt != null)
-//		{
-//		return updatedAt.toLocalDateTime().format(dateFormatter);
-//		}
-	
 	
 }

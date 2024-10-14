@@ -29,8 +29,8 @@
                         </th:block>
 
                         <!-- delete -->
-                        <th:block th:if="${deleteMessage != null}">
-                            <div th:replace="~{fragments/fragments :: deleteAlert(${ deleteMessage })}"></div>
+                        <th:block th:if="${error != null}">
+                            <div th:replace="~{fragments/fragments :: error(${ error })}"></div>
                         </th:block>
 
                         <div class="col-md-12">
@@ -61,7 +61,7 @@
 							            </td>
 							            <td>
 							                <a th:href="@{/tickets/show/{id}(id=${ticket.id})}" class="btn btn-sm btn-primary">Show</a>
-							                <a th:href="@{/tickets/edit/{id}(id=${ticket.id})}" class="btn btn-sm btn-warning">Edit</a>
+							                <a th:href="@{/tickets/admin/edit/{id}(id=${ticket.id})}" class="btn btn-sm btn-warning">Edit</a>
 
 							                <!-- Button trigger modal -->
 							                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" th:data-bs-target="'#delete-modal-' + ${ticket.id}">
